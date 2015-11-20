@@ -1,4 +1,8 @@
 # Steam TOTP
+[![npm version](https://img.shields.io/npm/v/steam-totp.svg)](https://npmjs.com/package/steam-totp)
+[![npm downloads](https://img.shields.io/npm/dm/steam-totp.svg)](https://npmjs.com/package/steam-totp)
+[![license](https://img.shields.io/npm/l/steam-totp.svg)](https://github.com/DoctorMcKay/node-steam-totp/blob/master/LICENSE)
+[![paypal](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=N36YVAT42CZ4G&item_name=node%2dsteam%2dtotp&currency_code=USD)
 
 This lightweight module generates Steam-style 5-digit alphanumeric two-factor authentication codes given a shared secret.
 
