@@ -7,15 +7,7 @@ var Crypto = require('crypto');
  * @returns {string}
  */
 exports.generateAuthCode = function(secret, timeOffset) {
-	if(typeof secret === 'string') {
-		// Check if it's hex
-		if(secret.match(/[0-9a-f]{40}/i)) {
-			secret = new Buffer(secret, 'hex');
-		} else {
-			// Looks like it's base64
-			secret = new Buffer(secret, 'base64');
-		}
-	}
+	secret = bufferizeSecret(secret);
 
 	var time = Math.floor(Date.now() / 1000) + (timeOffset || 0);
 
@@ -23,7 +15,7 @@ exports.generateAuthCode = function(secret, timeOffset) {
 	buffer.writeUInt32BE(0, 0); // This will stop working in 2038!
 	buffer.writeUInt32BE(Math.floor(time / 30), 4);
 
-	var hmac = require('crypto').createHmac('sha1', secret);
+	var hmac = Crypto.createHmac('sha1', secret);
 	hmac = hmac.update(buffer).digest();
 
 	var start = hmac[19] & 0x0F;
@@ -41,3 +33,17 @@ exports.generateAuthCode = function(secret, timeOffset) {
 
 	return code;
 };
+
+function bufferizeSecret(secret) {
+	if(typeof secret === 'string') {
+		// Check if it's hex
+		if(secret.match(/[0-9a-f]{40}/i)) {
+			return new Buffer(secret, 'hex');
+		} else {
+			// Looks like it's base64
+			return new Buffer(secret, 'base64');
+		}
+	}
+
+	return secret;
+}
