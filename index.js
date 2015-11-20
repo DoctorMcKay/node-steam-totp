@@ -2,11 +2,21 @@ var Crypto = require('crypto');
 
 /**
  * Generate a Steam-style TOTP authentication code.
- * @param {Buffer} secret - Your TOTP shared_secret
+ * @param {Buffer|string} secret - Your TOTP shared_secret as a Buffer, hex, or base64
  * @param {number} [timeOffset=0] - If you know how far off your clock is from the Steam servers, put the offset here in seconds
  * @returns {string}
  */
 exports.generateAuthCode = function(secret, timeOffset) {
+	if(typeof secret === 'string') {
+		// Check if it's hex
+		if(secret.match(/[0-9a-f]{40}/i)) {
+			secret = new Buffer(secret, 'hex');
+		} else {
+			// Looks like it's base64
+			secret = new Buffer(secret, 'base64');
+		}
+	}
+
 	var time = Math.floor(Date.now() / 1000) + (timeOffset || 0);
 
 	var buffer = new Buffer(8);
