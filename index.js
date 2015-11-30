@@ -21,7 +21,7 @@ exports.generateAuthCode = function(secret, timeOffset) {
 	var start = hmac[19] & 0x0F;
 	hmac = hmac.slice(start, start + 4);
 
-	var fullcode = hmac.readUInt32BE() & 0x7fffffff;
+	var fullcode = hmac.readUInt32BE(0) & 0x7fffffff;
 
 	var chars = '23456789BCDFGHJKMNPQRTVWXY';
 
