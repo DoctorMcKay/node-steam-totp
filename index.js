@@ -6,7 +6,7 @@ var Crypto = require('crypto');
  * @param {number} [timeOffset=0] - If you know how far off your clock is from the Steam servers, put the offset here in seconds
  * @returns {string}
  */
-exports.generateAuthCode = function(secret, timeOffset) {
+exports.generateAuthCode = exports.getAuthCode = function(secret, timeOffset) {
 	secret = bufferizeSecret(secret);
 
 	var time = Math.floor(Date.now() / 1000) + (timeOffset || 0);
@@ -41,7 +41,7 @@ exports.generateAuthCode = function(secret, timeOffset) {
  * @param {string} tag - The tag which identifies what this request (and therefore key) will be for. "conf" to load the confirmations page, "details" to load details about a trade, "allow" to confirm a trade, "cancel" to cancel it.
  * @returns {string}
  */
-exports.getConfirmationKey = function(identitySecret, time, tag) {
+exports.generateConfirmationKey = exports.getConfirmationKey = function(identitySecret, time, tag) {
 	identitySecret = bufferizeSecret(identitySecret);
 
 	var dataLen = 8;
