@@ -1,6 +1,15 @@
 var Crypto = require('crypto');
 
 /**
+ * Returns the current local Unix time
+ * @param {number} [timeOffset=0] - This many seconds will be added to the returned time
+ * @returns {number}
+ */
+exports.time = function(timeOffset) {
+	return Math.floor(Date.now() / 1000) + (timeOffset || 0);
+};
+
+/**
  * Generate a Steam-style TOTP authentication code.
  * @param {Buffer|string} secret - Your TOTP shared_secret as a Buffer, hex, or base64
  * @param {number} [timeOffset=0] - If you know how far off your clock is from the Steam servers, put the offset here in seconds
@@ -9,7 +18,7 @@ var Crypto = require('crypto');
 exports.generateAuthCode = exports.getAuthCode = function(secret, timeOffset) {
 	secret = bufferizeSecret(secret);
 
-	var time = Math.floor(Date.now() / 1000) + (timeOffset || 0);
+	var time = exports.time(timeOffset);
 
 	var buffer = new Buffer(8);
 	buffer.writeUInt32BE(0, 0); // This will stop working in 2038!
