@@ -106,8 +106,6 @@ exports.getTimeOffset = function(callback) {
 			var end = Date.now();
 			var offset = response.server_time - exports.time();
 
-			console.log("Server: " + response.server_time + ", us: " + exports.time());
-
 			callback(null, offset, end - start);
 		});
 	});
