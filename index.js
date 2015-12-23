@@ -75,6 +75,50 @@ exports.generateConfirmationKey = exports.getConfirmationKey = function(identity
 	return hmac.update(buffer).digest('base64');
 };
 
+exports.getTimeOffset = function(callback) {
+	var start = Date.now();
+	var req = require('https').request({
+		"hostname": "api.steampowered.com",
+		"path": "/ITwoFactorService/QueryTime/v1/",
+		"method": "POST"
+	}, function(res) {
+		if(res.statusCode != 200) {
+			callback(new Error("HTTP error " + res.statusCode));
+			return;
+		}
+
+		var response = '';
+		res.on('data', function(chunk) {
+			response += chunk;
+		});
+
+		res.on('end', function() {
+			try {
+				response = JSON.parse(response).response;
+			} catch(e) {
+				callback(new Error("Malformed response"));
+			}
+
+			if(!response || !response.server_time) {
+				callback(new Error("Malformed response"));
+			}
+
+			var end = Date.now();
+			var offset = response.server_time - exports.time();
+
+			console.log("Server: " + response.server_time + ", us: " + exports.time());
+
+			callback(null, offset, end - start);
+		});
+	});
+
+	req.on('error', function(err) {
+		callback(err);
+	});
+
+	req.end();
+};
+
 function bufferizeSecret(secret) {
 	if(typeof secret === 'string') {
 		// Check if it's hex

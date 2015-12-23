@@ -20,11 +20,13 @@ var code = SteamTotp.generateAuthCode('cnOgv/KdpLoP6Nbh0GMkXkPXALQ=');
 
 Simply returns the current local time in Unix time. This is just `Math.floor(Date.now() / 1000) + timeOffset`.
 
-## generateAuthCode(secret[, timeOffset])
+## getAuthCode(secret[, timeOffset])
 - `secret` - Your `shared_secret`, as a `Buffer`, hex string, or base64 string
 - `timeOffset` - If you know your clock's offset from the Steam servers, you can provide it here. This number of seconds will be added to the current time to produce the final time. Default 0.
 
 Returns your current 5-character alphanumeric TOTP code as a string.
+
+*Alias: generateAuthCode(secret[, timeOffset])*
 
 ## getConfirmationKey(identitySecret, time, tag)
 - `identitySecret` - Your `identity_secret`, as a `Buffer`, hex string, or base64 string
@@ -34,3 +36,18 @@ Returns your current 5-character alphanumeric TOTP code as a string.
 **v1.1.0 or later is required to use this function**
 
 Returns a string containing your base64 confirmation key for use with the mobile confirmations web page.
+
+*Alias: generateConfirmationKey(identitySecret, time, tag)*
+
+## getTimeOffset(callback)
+- `callback` - Called when the request completes
+    - `offset` - The time offset in seconds
+    - `latency` - The time in milliseconds between when we sent the request and when we received a response
+
+**v1.2.0 or later is required to use this function**
+
+Queries the Steam servers for their time, then subtracts our local time from it to get our offset.
+
+The offset is how many seconds we are **behind** Steam. Therefore, **add** this number to our local time to get Steam time.
+
+You can pass this value to `time()` or to `getAuthCode()` as-is with no math involved.
