@@ -80,7 +80,10 @@ exports.getTimeOffset = function(callback) {
 	var req = require('https').request({
 		"hostname": "api.steampowered.com",
 		"path": "/ITwoFactorService/QueryTime/v1/",
-		"method": "POST"
+		"method": "POST",
+		"headers": {
+			"Content-Length": 0
+		}
 	}, function(res) {
 		if(res.statusCode != 200) {
 			callback(new Error("HTTP error " + res.statusCode));
