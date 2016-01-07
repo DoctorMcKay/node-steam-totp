@@ -41,6 +41,7 @@ Returns a string containing your base64 confirmation key for use with the mobile
 
 ## getTimeOffset(callback)
 - `callback` - Called when the request completes
+    - `error` - An `Error` object, or `null` on success
     - `offset` - The time offset in seconds
     - `latency` - The time in milliseconds between when we sent the request and when we received a response
 
