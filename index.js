@@ -120,6 +120,16 @@ exports.getTimeOffset = function(callback) {
 	req.end();
 };
 
+/**
+ * Get a standardized device ID based on your SteamID.
+ * @param {string|object} steamID - Your SteamID, either as a string or as an object which has a toString() method that returns the SteamID
+ * @returns {string}
+ */
+exports.getDeviceID = function(steamID) {
+	return "android:" + Crypto.createHash('sha1').update(steamID.toString()).digest('hex')
+			.replace(/^([a-z0-9]{8})([a-z0-9]{4})([a-z0-9]{4})([a-z0-9]{4})([a-z0-9]{12}).*$/, '$1-$2-$3-$4-$5');
+};
+
 function bufferizeSecret(secret) {
 	if(typeof secret === 'string') {
 		// Check if it's hex

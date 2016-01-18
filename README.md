@@ -52,3 +52,21 @@ Queries the Steam servers for their time, then subtracts our local time from it 
 The offset is how many seconds we are **behind** Steam. Therefore, **add** this number to our local time to get Steam time.
 
 You can pass this value to `time()` or to `getAuthCode()` as-is with no math involved.
+
+## getDeviceID(steamID)
+- `steamID` - Your SteamID as a string or an object (such as a `SteamID` object) which has a `toString()` method that returns the SteamID as a 64-bit integer string.
+
+**v1.3.0 or later is required to use this function**
+
+Returns a standardized device ID in the same format as Android device IDs from Valve's official mobile app. Steam will
+likely soon stop allowing you to send a different device ID each time you load the page, instead requiring you to
+consistently use the same device ID. If you use this function's algorithm everywhere you use a confirmation device ID,
+then your experience should be fine.
+
+The algorithm used is:
+
+1. Convert the SteamID to a string
+2. SHA-1 hash it and encode the resulting hash as a lowercase hex value
+3. Truncate the hash to 32 characters
+4. Insert dashes such that the resulting value has 5 groups of hexadecimal values containing 8, 4, 4, 4, and 12 characters, respectively
+5. Prepend "android:" to the resulting value
