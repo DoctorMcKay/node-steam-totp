@@ -127,7 +127,7 @@ exports.getTimeOffset = function(callback) {
  */
 exports.getDeviceID = function(steamID) {
 	return "android:" + Crypto.createHash('sha1').update(steamID.toString()).digest('hex')
-			.replace(/^([a-z0-9]{8})([a-z0-9]{4})([a-z0-9]{4})([a-z0-9]{4})([a-z0-9]{12}).*$/, '$1-$2-$3-$4-$5');
+			.replace(/^([0-9a-f]{8})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{12}).*$/, '$1-$2-$3-$4-$5');
 };
 
 function bufferizeSecret(secret) {
