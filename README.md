@@ -20,13 +20,21 @@ var code = SteamTotp.generateAuthCode('cnOgv/KdpLoP6Nbh0GMkXkPXALQ=');
 
 Simply returns the current local time in Unix time. This is just `Math.floor(Date.now() / 1000) + timeOffset`.
 
-## getAuthCode(secret[, timeOffset])
+## getAuthCode(secret[, timeOffset][, callback])
 - `secret` - Your `shared_secret`, as a `Buffer`, hex string, or base64 string
-- `timeOffset` - If you know your clock's offset from the Steam servers, you can provide it here. This number of seconds will be added to the current time to produce the final time. Default 0.
+- `timeOffset` - Optional. If you know your clock's offset from the Steam servers, you can provide it here. This number of seconds will be added to the current time to produce the final time. Default 0.
+- `callback` - Optional. If you provide a callback, then the auth code will **not** be returned and it will be provided to the callback. If provided, the module will also account for time discrepancies with the Steam servers. If you use this, **do not** provide a `timeOffset`.
+    - `err` - An `Error` object on failure, or `null` on success
+    - `code` - Your auth code, as a string
+    - `offset` - Your time offset, in seconds. You can pass this to `time` later if you need to, for example to get confirmation keys.
+    - `latency` - The time in milliseconds between when we sent our request and when we received a response from the Steam time server.
 
-Returns your current 5-character alphanumeric TOTP code as a string.
+**v1.4.0 or later is required to use `callback`.**
 
-*Alias: generateAuthCode(secret[, timeOffset])*
+Returns your current 5-character alphanumeric TOTP code as a string (if no callback is provided) or queries the current
+time from the Steam servers and returns the code in the callback (if the callback was provided).
+
+*Alias: generateAuthCode(secret[, timeOffset][, callback])*
 
 ## getConfirmationKey(identitySecret, time, tag)
 - `identitySecret` - Your `identity_secret`, as a `Buffer`, hex string, or base64 string

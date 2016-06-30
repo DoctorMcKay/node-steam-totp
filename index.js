@@ -16,6 +16,20 @@ exports.time = function(timeOffset) {
  * @returns {string}
  */
 exports.generateAuthCode = exports.getAuthCode = function(secret, timeOffset) {
+	if (typeof timeOffset === 'function') {
+		exports.getTimeOffset(function(err, offset, latency) {
+			if (err) {
+				timeOffset(err);
+				return;
+			}
+			
+			var code = exports.generateAuthCode(secret, offset);
+			timeOffset(null, code, offset, latency);
+		});
+
+		return;
+	}
+	
 	secret = bufferizeSecret(secret);
 
 	var time = exports.time(timeOffset);
@@ -30,7 +44,7 @@ exports.generateAuthCode = exports.getAuthCode = function(secret, timeOffset) {
 	var start = hmac[19] & 0x0F;
 	hmac = hmac.slice(start, start + 4);
 
-	var fullcode = hmac.readUInt32BE(0) & 0x7fffffff;
+	var fullcode = hmac.readUInt32BE(0) & 0x7FFFFFFF;
 
 	var chars = '23456789BCDFGHJKMNPQRTVWXY';
 
