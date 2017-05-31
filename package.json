@@ -16,5 +16,8 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/DoctorMcKay/node-steam-totp.git"
+	},
+	"engines": {
+		"node": ">=6.0.0"
 	}
 }
