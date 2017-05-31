@@ -6,6 +6,8 @@
 
 This lightweight module generates Steam-style 5-digit alphanumeric two-factor authentication codes given a shared secret.
 
+This reports anonymous usage statistics to the author. [See here](https://github.com/DoctorMcKay/node-stats-reporter) for more information.
+
 Usage is simple:
 
 ```js
