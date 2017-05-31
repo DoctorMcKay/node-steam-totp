@@ -34,7 +34,7 @@ exports.generateAuthCode = exports.getAuthCode = function(secret, timeOffset) {
 
 	var time = exports.time(timeOffset);
 
-	var buffer = new Buffer(8);
+	var buffer = Buffer.allocUnsafe(8);
 	buffer.writeUInt32BE(0, 0); // This will stop working in 2038!
 	buffer.writeUInt32BE(Math.floor(time / 30), 4);
 
@@ -77,7 +77,7 @@ exports.generateConfirmationKey = exports.getConfirmationKey = function(identity
 		}
 	}
 
-	var buffer = new Buffer(dataLen);
+	var buffer = Buffer.allocUnsafe(dataLen);
 	buffer.writeUInt32BE(0, 0); // This will stop working in 2038!
 	buffer.writeUInt32BE(time, 4);
 
@@ -148,10 +148,10 @@ function bufferizeSecret(secret) {
 	if(typeof secret === 'string') {
 		// Check if it's hex
 		if(secret.match(/[0-9a-f]{40}/i)) {
-			return new Buffer(secret, 'hex');
+			return Buffer.from(secret, 'hex');
 		} else {
 			// Looks like it's base64
-			return new Buffer(secret, 'base64');
+			return Buffer.from(secret, 'base64');
 		}
 	}
 
