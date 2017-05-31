@@ -127,9 +127,7 @@ exports.getTimeOffset = function(callback) {
 		});
 	});
 
-	req.on('error', (err) => {
-		callback(err);
-	});
+	req.on('error', callback);
 
 	req.end();
 };
