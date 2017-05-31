@@ -1,4 +1,4 @@
-var Crypto = require('crypto');
+const Crypto = require('crypto');
 
 /**
  * Returns the current local Unix time
@@ -17,13 +17,13 @@ exports.time = function(timeOffset) {
  */
 exports.generateAuthCode = exports.getAuthCode = function(secret, timeOffset) {
 	if (typeof timeOffset === 'function') {
-		exports.getTimeOffset(function(err, offset, latency) {
+		exports.getTimeOffset((err, offset, latency) => {
 			if (err) {
 				timeOffset(err);
 				return;
 			}
 			
-			var code = exports.generateAuthCode(secret, offset);
+			let code = exports.generateAuthCode(secret, offset);
 			timeOffset(null, code, offset, latency);
 		});
 
@@ -32,24 +32,24 @@ exports.generateAuthCode = exports.getAuthCode = function(secret, timeOffset) {
 	
 	secret = bufferizeSecret(secret);
 
-	var time = exports.time(timeOffset);
+	let time = exports.time(timeOffset);
 
-	var buffer = Buffer.allocUnsafe(8);
+	let buffer = Buffer.allocUnsafe(8);
 	buffer.writeUInt32BE(0, 0); // This will stop working in 2038!
 	buffer.writeUInt32BE(Math.floor(time / 30), 4);
 
-	var hmac = Crypto.createHmac('sha1', secret);
+	let hmac = Crypto.createHmac('sha1', secret);
 	hmac = hmac.update(buffer).digest();
 
-	var start = hmac[19] & 0x0F;
+	let start = hmac[19] & 0x0F;
 	hmac = hmac.slice(start, start + 4);
 
-	var fullcode = hmac.readUInt32BE(0) & 0x7FFFFFFF;
+	let fullcode = hmac.readUInt32BE(0) & 0x7FFFFFFF;
 
-	var chars = '23456789BCDFGHJKMNPQRTVWXY';
+	const chars = '23456789BCDFGHJKMNPQRTVWXY';
 
-	var code = '';
-	for(var i = 0; i < 5; i++) {
+	let code = '';
+	for (let i = 0; i < 5; i++) {
 		code += chars.charAt(fullcode % chars.length);
 		fullcode /= chars.length;
 	}
@@ -67,67 +67,67 @@ exports.generateAuthCode = exports.getAuthCode = function(secret, timeOffset) {
 exports.generateConfirmationKey = exports.getConfirmationKey = function(identitySecret, time, tag) {
 	identitySecret = bufferizeSecret(identitySecret);
 
-	var dataLen = 8;
+	let dataLen = 8;
 
-	if(tag) {
-		if(tag.length > 32) {
+	if (tag) {
+		if (tag.length > 32) {
 			dataLen += 32;
 		} else {
 			dataLen += tag.length;
 		}
 	}
 
-	var buffer = Buffer.allocUnsafe(dataLen);
+	let buffer = Buffer.allocUnsafe(dataLen);
 	buffer.writeUInt32BE(0, 0); // This will stop working in 2038!
 	buffer.writeUInt32BE(time, 4);
 
-	if(tag) {
+	if (tag) {
 		buffer.write(tag, 8);
 	}
 
-	var hmac = Crypto.createHmac('sha1', identitySecret);
+	let hmac = Crypto.createHmac('sha1', identitySecret);
 	return hmac.update(buffer).digest('base64');
 };
 
 exports.getTimeOffset = function(callback) {
-	var start = Date.now();
-	var req = require('https').request({
+	let start = Date.now();
+	let req = require('https').request({
 		"hostname": "api.steampowered.com",
 		"path": "/ITwoFactorService/QueryTime/v1/",
 		"method": "POST",
 		"headers": {
 			"Content-Length": 0
 		}
-	}, function(res) {
-		if(res.statusCode != 200) {
+	}, (res) => {
+		if (res.statusCode != 200) {
 			callback(new Error("HTTP error " + res.statusCode));
 			return;
 		}
 
-		var response = '';
-		res.on('data', function(chunk) {
+		let response = '';
+		res.on('data', (chunk) => {
 			response += chunk;
 		});
 
-		res.on('end', function() {
+		res.on('end', () => {
 			try {
 				response = JSON.parse(response).response;
 			} catch(e) {
 				callback(new Error("Malformed response"));
 			}
 
-			if(!response || !response.server_time) {
+			if (!response || !response.server_time) {
 				callback(new Error("Malformed response"));
 			}
 
-			var end = Date.now();
-			var offset = response.server_time - exports.time();
+			let end = Date.now();
+			let offset = response.server_time - exports.time();
 
 			callback(null, offset, end - start);
 		});
 	});
 
-	req.on('error', function(err) {
+	req.on('error', (err) => {
 		callback(err);
 	});
 
@@ -145,9 +145,9 @@ exports.getDeviceID = function(steamID) {
 };
 
 function bufferizeSecret(secret) {
-	if(typeof secret === 'string') {
+	if (typeof secret === 'string') {
 		// Check if it's hex
-		if(secret.match(/[0-9a-f]{40}/i)) {
+		if (secret.match(/[0-9a-f]{40}/i)) {
 			return Buffer.from(secret, 'hex');
 		} else {
 			// Looks like it's base64
