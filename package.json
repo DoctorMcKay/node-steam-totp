@@ -13,6 +13,9 @@
 		"email": "mckay@doctormckay.com",
 		"url": "https://www.doctormckay.com"
 	},
+	"dependencies": {
+		"@doctormckay/stats-reporter": "^1.0.0"
+	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/DoctorMcKay/node-steam-totp.git"

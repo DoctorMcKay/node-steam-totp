@@ -1,3 +1,5 @@
+require('@doctormckay/stats-reporter').setup(require('./package.json'));
+
 var Crypto = require('crypto');
 
 /**
