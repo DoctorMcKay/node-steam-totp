@@ -1,6 +1,6 @@
 {
 	"name": "steam-totp",
-	"version": "1.4.0",
+	"version": "1.4.1",
 	"description": "Generate Steam-style TOTP codes given a secret",
 	"keywords": ["steam", "steam client", "steam guard"],
 	"homepage": "https://github.com/DoctorMcKay/node-steam-totp",
