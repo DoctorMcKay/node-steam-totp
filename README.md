@@ -17,6 +17,8 @@ var SteamTotp = require('steam-totp');
 var code = SteamTotp.generateAuthCode('cnOgv/KdpLoP6Nbh0GMkXkPXALQ=');
 ```
 
+[Read more about Steam's 2FA and trade confirmations.](https://dev.doctormckay.com/topic/289-trading-and-escrow-mobile-trade-confirmations/)
+
 ## time([timeOffset])
 - `timeOffset` - Default 0 if omitted. This many seconds will be added to the returned value.
 
@@ -38,6 +40,8 @@ Simply returns the current local time in Unix time. This is just `Math.floor(Dat
 Returns your current 5-character alphanumeric TOTP code as a string (if no callback is provided) or queries the current
 time from the Steam servers and returns the code in the callback (if the callback was provided).
 
+**Note:** You should use your `shared_secret` for this function.
+
 *Alias: generateAuthCode(secret[, timeOffset][, callback])*
 
 ## getConfirmationKey(identitySecret, time, tag)
@@ -48,6 +52,8 @@ time from the Steam servers and returns the code in the callback (if the callbac
 **v1.1.0 or later is required to use this function**
 
 Returns a string containing your base64 confirmation key for use with the mobile confirmations web page.
+
+**Note:** You should use your `identity_secret` for this function.
 
 *Alias: generateConfirmationKey(identitySecret, time, tag)*
 
