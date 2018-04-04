@@ -84,7 +84,10 @@ then your experience should be fine.
 The algorithm used is:
 
 1. Convert the SteamID to a string
-2. SHA-1 hash it and encode the resulting hash as a lowercase hex value
-3. Truncate the hash to 32 characters
-4. Insert dashes such that the resulting value has 5 groups of hexadecimal values containing 8, 4, 4, 4, and 12 characters, respectively
-5. Prepend "android:" to the resulting value
+2. Append the value of the `STEAM_TOTP_SALT` environment variable to the SteamID, if it's set
+3. SHA-1 hash it and encode the resulting hash as a lowercase hex value
+4. Truncate the hash to 32 characters
+5. Insert dashes such that the resulting value has 5 groups of hexadecimal values containing 8, 4, 4, 4, and 12 characters, respectively
+6. Prepend "android:" to the resulting value
+
+Note: `STEAM_TOTP_SALT` was added to the v1 branch in v1.5.0 and to the v2 branch in v2.1.0.
