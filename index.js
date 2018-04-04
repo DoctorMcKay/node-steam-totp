@@ -141,7 +141,7 @@ exports.getTimeOffset = function(callback) {
  * @returns {string}
  */
 exports.getDeviceID = function(steamID) {
-	let salt = global._steam_totp_salt || '';
+	let salt = process.env.STEAM_TOTP_SALT || '';
 	return "android:" + Crypto.createHash('sha1').update(steamID.toString() + salt).digest('hex')
 			.replace(/^([0-9a-f]{8})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{12}).*$/, '$1-$2-$3-$4-$5');
 };
