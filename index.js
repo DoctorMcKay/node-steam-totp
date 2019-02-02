@@ -38,7 +38,7 @@ exports.generateAuthCode = exports.getAuthCode = function(secret, timeOffset) {
 	let time = exports.time(timeOffset);
 
 	let buffer = Buffer.allocUnsafe(8);
-	buffer.writeUInt32BE(0, 0); // This will stop working in 2038!
+	buffer.writeUInt32BE(0, 0);
 	buffer.writeUInt32BE(Math.floor(time / 30), 4);
 
 	let hmac = Crypto.createHmac('sha1', secret);
@@ -81,7 +81,7 @@ exports.generateConfirmationKey = exports.getConfirmationKey = function(identity
 	}
 
 	let buffer = Buffer.allocUnsafe(dataLen);
-	buffer.writeUInt32BE(0, 0); // This will stop working in 2038!
+	buffer.writeUInt32BE(0, 0);
 	buffer.writeUInt32BE(time, 4);
 
 	if (tag) {
