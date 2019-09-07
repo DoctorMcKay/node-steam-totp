@@ -6,8 +6,6 @@
 
 This lightweight module generates Steam-style 5-digit alphanumeric two-factor authentication codes given a shared secret.
 
-This reports anonymous usage statistics to the author. [See here](https://github.com/DoctorMcKay/node-stats-reporter) for more information.
-
 **As of v2.0.0, Node.js v6.0.0 or later is REQUIRED. This LTS Node.js release will be supported by this module for the duration of Node's LTS support.**
 
 Usage is simple:

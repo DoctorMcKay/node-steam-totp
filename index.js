@@ -1,5 +1,4 @@
 'use strict';
-require('@doctormckay/stats-reporter').setup(require('./package.json'));
 
 const Crypto = require('crypto');
 
@@ -25,14 +24,14 @@ exports.generateAuthCode = exports.getAuthCode = function(secret, timeOffset) {
 				timeOffset(err);
 				return;
 			}
-			
+
 			let code = exports.generateAuthCode(secret, offset);
 			timeOffset(null, code, offset, latency);
 		});
 
 		return;
 	}
-	
+
 	secret = bufferizeSecret(secret);
 
 	let time = exports.time(timeOffset);
