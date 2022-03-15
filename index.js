@@ -37,6 +37,9 @@ exports.generateAuthCode = exports.getAuthCode = function(secret, timeOffset) {
 	let time = exports.time(timeOffset);
 
 	let buffer = Buffer.allocUnsafe(8);
+	// The first 4 bytes are the high 4 bytes of a 64-bit integer. To make things easier on ourselves, let's just pretend
+	// that it's a 32-bit int and write 0 for the high bytes. Since we're dividing by 30, this won't cause a problem
+	// until the year 6053.
 	buffer.writeUInt32BE(0, 0);
 	buffer.writeUInt32BE(Math.floor(time / 30), 4);
 
@@ -80,6 +83,9 @@ exports.generateConfirmationKey = exports.getConfirmationKey = function(identity
 	}
 
 	let buffer = Buffer.allocUnsafe(dataLen);
+	// This will be a problem in 2038. Hopefully by then we'll be able to require node v10.20.0 or later, which adds
+	// Buffer#writeUInt64BE. For now, let's just pretend there won't be a problem because I don't want to add a bigint
+	// module dependency.
 	buffer.writeUInt32BE(0, 0);
 	buffer.writeUInt32BE(time, 4);
 
