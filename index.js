@@ -83,11 +83,17 @@ exports.generateConfirmationKey = exports.getConfirmationKey = function(identity
 	}
 
 	let buffer = Buffer.allocUnsafe(dataLen);
-	// This will be a problem in 2038. Hopefully by then we'll be able to require node v10.20.0 or later, which adds
-	// Buffer#writeUInt64BE. For now, let's just pretend there won't be a problem because I don't want to add a bigint
-	// module dependency.
-	buffer.writeUInt32BE(0, 0);
-	buffer.writeUInt32BE(time, 4);
+
+	// Auto-detect whether we have support for Buffer#writeUInt64BE and use it if we can. If we have writeUInt64BE
+	// then we also definitely have BigInt.
+	if (buffer.writeBigUInt64BE) {
+		buffer.writeBigUInt64BE(BigInt(time), 0);
+	} else {
+		// Fall back to old Y2K38-unsafe behavior.
+		// If you're still using Node.js <10.20.0 in 2038, you only have yourself to blame.
+		buffer.writeUInt32BE(0, 0);
+		buffer.writeUInt32BE(time, 4);
+	}
 
 	if (tag) {
 		buffer.write(tag, 8);
